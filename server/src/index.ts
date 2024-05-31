@@ -2,6 +2,7 @@ import { Socket, Server } from "socket.io";
 import express, { Request, Response } from 'express'
 import { createServer } from 'http'
 import {config} from 'dotenv'
+import { UserManager } from "./managers/userManager";
 
 config()
 const app = express();
@@ -14,11 +15,10 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket: Socket) => {
-    console.log('a user connected with socket id', socket.id);
-
-    socket.on('send-message', (data) => {
-        io.emit('recieve-message', data)
-    })
+    const user = new UserManager(socket, io)
+    socket.on('create-room', (roomId: string) => user.createRoom(roomId))
+    socket.on('enter-room', (roomId: string) => user.enterRoom(roomId))
+    socket.on('exit-room', (roomId: string) => user.exitRoom(roomId))
 });
 
 app.use(express.json());
