@@ -4,7 +4,7 @@ type User = Socket
 type RoomId = string
 type channel = Server
 
-const roomMap = new Map<RoomId, User[]>()
+export const roomMap = new Map<RoomId, User[]>()
 
 export class UserManager {
     private socket

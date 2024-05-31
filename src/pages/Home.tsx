@@ -15,23 +15,25 @@ const Home = () => {
     const roomId = v4()
     setRoomId(roomId)
     socket.emit('create-room', roomId)
-    navigate(`/documents/${roomId}`)
   }
 
   const enterRoomHandler = () => {
     socket.emit('enter-room', roomId)
-    setIsValidRoomId(false)
   }
 
   useEffect(() => {
-    socket.on('enter-room', (room: string) => {
+    socket.on('room-entered', (room: string) => {
       setRoomId(room)
       setIsValidRoomId(true)
       navigate(`/documents/${room}`)
     })
+    socket.on('room-created', (room: string) => navigate(`/documents/${room}`))
+    socket.on('invalid-room', (_: string) => setIsValidRoomId(false))
 
     return () => {
-      socket.off('enter-room')
+      socket.off('room-entered')
+      socket.off('invalid-room')
+      socket.off('room-created')
       setIsJoining(false)
       setRoomId('')
       setIsValidRoomId(true)
@@ -66,7 +68,7 @@ const Home = () => {
           }
         </div>
       }
-    </div >
+    </div>
   )
 }
 

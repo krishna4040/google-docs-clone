@@ -1,8 +1,8 @@
 import { Socket, Server } from "socket.io";
 import express, { Request, Response } from 'express'
 import { createServer } from 'http'
-import {config} from 'dotenv'
-import { UserManager } from "./managers/userManager";
+import { config } from 'dotenv'
+import { UserManager, roomMap } from "./managers/userManager";
 
 config()
 const app = express();
